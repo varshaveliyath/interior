@@ -4,14 +4,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [hidden, setHidden] = useState(false);
 
     useEffect(() => {
+        let lastScrollY = window.scrollY;
         const handleScroll = () => {
-            setScrolled(window.scrollY > 80);
+            const currentScrollY = window.scrollY;
+            setScrolled(currentScrollY > 80);
+            
+            if (currentScrollY > lastScrollY && currentScrollY > 100 && !menuOpen) {
+                setHidden(true);
+            } else {
+                setHidden(false);
+            }
+            lastScrollY = currentScrollY;
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [menuOpen]);
 
     const scrollTo = (id) => {
         setMenuOpen(false);
@@ -24,14 +34,22 @@ const Navbar = () => {
         }
     };
 
-    const links = ['home', 'about', 'services', 'projects', 'contact'];
+    const links = [
+        { label: 'Home', id: 'home' },
+        { label: 'About', id: 'living' },
+        { label: 'Portfolio', id: 'portfolio' },
+        { label: 'Process', id: 'process' },
+        { label: 'Contact', id: 'testimonials' },
+    ];
 
     return (
         <>
         <nav className={scrolled ? 'scrolled' : ''} style={{
             position: 'fixed', top: 0, left: 0, width: '100%', height: '64px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0 4vw', zIndex: 1000
+            padding: '0 4vw', zIndex: 1000,
+            transform: hidden ? 'translateY(-100%)' : 'translateY(0)',
+            transition: 'transform 0.3s ease-in-out, background 0.4s ease, border 0.4s ease, backdrop-filter 0.4s ease'
         }}>
             <div className="nav-logo" style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
                 <svg width="24" height="32" viewBox="0 0 100 150">
@@ -43,14 +61,14 @@ const Navbar = () => {
 
             <div className="nav-links" style={{ display: 'flex', gap: '3rem' }}>
                 {links.map((item) => (
-                    <a key={item} href={`#${item}`} className="nav-link" onClick={(e) => { e.preventDefault(); scrollTo(item); }}>
-                        {item.charAt(0).toUpperCase() + item.slice(1)}
+                    <a key={item.id} href={`#${item.id}`} className="nav-link" onClick={(e) => { e.preventDefault(); scrollTo(item.id); }}>
+                        {item.label}
                     </a>
                 ))}
             </div>
 
             <a href="#contact" className="btn-outline contact-btn" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }}>
-                Book Consultation
+                Start Project
             </a>
 
             {/* Hamburger Button (Mobile Only) */}
@@ -82,13 +100,13 @@ const Navbar = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 + i * 0.1 }}
-                            key={item} 
-                            href={`#${item}`} 
+                            key={item.id} 
+                            href={`#${item.id}`} 
                             className="cormorant"
                             style={{ fontSize: '3rem', color: 'var(--cream)', textDecoration: 'none', textTransform: 'uppercase' }}
-                            onClick={(e) => { e.preventDefault(); scrollTo(item); }}
+                            onClick={(e) => { e.preventDefault(); scrollTo(item.id); }}
                         >
-                            {item}
+                            {item.label}
                         </motion.a>
                     ))}
                     <motion.a 
@@ -100,7 +118,7 @@ const Navbar = () => {
                         style={{ marginTop: '2rem' }}
                         onClick={(e) => { e.preventDefault(); scrollTo('contact'); }}
                     >
-                        Book Consultation
+                        Start Project
                     </motion.a>
                 </motion.div>
             )}

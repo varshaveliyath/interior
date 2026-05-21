@@ -76,7 +76,7 @@ const Outro = () => {
             trigger: sectionRef.current,
             start: "top top",
             end: "bottom bottom",
-            scrub: true,
+            scrub: 1.5,
             onUpdate: (self) => {
                 const progress = self.progress;
                 // Move camera backwards and up as user scrolls down
@@ -123,13 +123,19 @@ const Outro = () => {
                 
                 <div ref={textRef} style={{ 
                     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                    textAlign: 'center', zIndex: 10, pointerEvents: 'none', width: '100%', opacity: 0
+                    textAlign: 'center', zIndex: 10, width: '100%', opacity: 0,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center'
                 }}>
-                    <span className="section-label">THE VISION</span>
-                    <h2 className="hero-headline" style={{ fontSize: '8vw', color: '#E8A84C', margin: 0, textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>
-                        See the Bigger Picture
+                    <span className="section-label">YOUR VISION</span>
+                    
+                    <h2 className="hero-headline" style={{ fontSize: 'clamp(3rem, 6vw, 6rem)', color: '#E8A84C', margin: '2rem 0 0 0', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>
+                        Let's Build the Extraordinary
                     </h2>
-                    <p className="hero-sub" style={{ marginTop: '2rem', opacity: 0.8, color: '#fff' }}>Step back and admire the masterplan.</p>
+                    <p className="hero-sub" style={{ marginTop: '1.5rem', marginBottom: '2.5rem', opacity: 0.8, color: '#fff' }}>Ready to transform your space?</p>
+                    
+                    <a href="#contact" className="btn-outline" style={{ background: '#E8A84C', color: '#080808', padding: '1rem 3rem', fontSize: '14px', pointerEvents: 'auto' }}>
+                        Start Your Project
+                    </a>
                 </div>
             </div>
         </section>

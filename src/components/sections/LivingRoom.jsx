@@ -1,96 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const LivingRoom = () => {
     const sectionRef = useRef(null);
-    const canvasRef = useRef(null);
     const parallaxRef = useRef(null);
-
-    // Inline 3D Floating Cushion (Pure Three.js)
-    useEffect(() => {
-        if (!canvasRef.current) return;
-
-        const container = canvasRef.current;
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 0, 4);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-        container.appendChild(renderer.domElement);
-
-        // Warm lighting
-        const ambient = new THREE.AmbientLight(0xffeedd, 0.4);
-        scene.add(ambient);
-        const spot = new THREE.SpotLight(0xC9A96E, 8);
-        spot.position.set(3, 5, 5);
-        spot.penumbra = 1;
-        scene.add(spot);
-        const rimLight = new THREE.PointLight(0x4c88e8, 3);
-        rimLight.position.set(-4, 2, -2);
-        scene.add(rimLight);
-
-        // Cushion shape (rounded box approximation)
-        const cushionGeo = new THREE.SphereGeometry(1, 32, 16);
-        cushionGeo.scale(1.2, 0.5, 1);
-        const cushionMat = new THREE.MeshStandardMaterial({
-            color: 0xC9A96E,
-            roughness: 0.6,
-            metalness: 0.1,
-        });
-        const cushion = new THREE.Mesh(cushionGeo, cushionMat);
-        scene.add(cushion);
-
-        // Second smaller cushion
-        const cushion2Geo = new THREE.SphereGeometry(0.6, 32, 16);
-        cushion2Geo.scale(1.1, 0.5, 1);
-        const cushion2 = new THREE.Mesh(cushion2Geo, new THREE.MeshStandardMaterial({
-            color: 0xE8A84C,
-            roughness: 0.5,
-            metalness: 0.15,
-        }));
-        cushion2.position.set(1.2, 0.3, 0.5);
-        cushion2.rotation.z = 0.3;
-        scene.add(cushion2);
-
-        let isVisible = false;
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => isVisible = entry.isIntersecting);
-        }, { threshold: 0 });
-        if (sectionRef.current) observer.observe(sectionRef.current);
-
-        let frameId;
-        const animate = () => {
-            frameId = requestAnimationFrame(animate);
-            if (!isVisible) return;
-            cushion.rotation.y += 0.003;
-            cushion.position.y = Math.sin(Date.now() * 0.001) * 0.15;
-            cushion2.rotation.y -= 0.004;
-            cushion2.position.y = Math.sin(Date.now() * 0.0012 + 1) * 0.12 + 0.3;
-            renderer.render(scene, camera);
-        };
-        animate();
-
-        const handleResize = () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        };
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            cancelAnimationFrame(frameId);
-            observer.disconnect();
-            window.removeEventListener('resize', handleResize);
-            if (container.contains(renderer.domElement)) {
-                container.removeChild(renderer.domElement);
-            }
-            renderer.dispose();
-        };
-    }, []);
+    const imageRef = useRef(null);
 
     // GSAP Parallax Scroll Animation
     useEffect(() => {
@@ -106,11 +21,27 @@ const LivingRoom = () => {
                         trigger: sectionRef.current,
                         start: 'top 80%',
                         end: 'center center',
-                        scrub: 1,
+                        scrub: 1.5,
                     }
                 }
             );
         });
+
+        // Image parallax
+        if (imageRef.current) {
+            gsap.fromTo(imageRef.current,
+                { y: 100, opacity: 0 },
+                {
+                    y: -20, opacity: 1,
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: 'top 80%',
+                        end: 'bottom center',
+                        scrub: 1.5,
+                    }
+                }
+            );
+        }
 
         // Section headline reveal
         gsap.fromTo(sectionRef.current.querySelector('.section-headline'),
@@ -121,7 +52,7 @@ const LivingRoom = () => {
                     trigger: sectionRef.current,
                     start: 'top 70%',
                     end: 'top 30%',
-                    scrub: 1,
+                    scrub: 1.5,
                 }
             }
         );
@@ -135,7 +66,7 @@ const LivingRoom = () => {
             overflow: 'hidden',
             padding: '120px 0',
         }}>
-            {/* Ambient Fog Gradient (CSS-based fallback for Vanta) */}
+            {/* Ambient Fog Gradient */}
             <div style={{
                 position: 'absolute', inset: 0, zIndex: 0,
                 background: 'radial-gradient(ellipse at 30% 50%, #1a1520 0%, #0a0a0f 50%, #07070A 100%)',
@@ -159,7 +90,7 @@ const LivingRoom = () => {
                     <span style={{ color: '#C9A96E' }}>First Impressions</span>
                 </h2>
 
-                {/* Content Grid: Parallax Text + 3D Object */}
+                {/* Content Grid: Parallax Text + Image */}
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr',
@@ -175,10 +106,10 @@ const LivingRoom = () => {
                                 color: '#999',
                                 fontFamily: "'Satoshi', sans-serif",
                             }}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                                Sed do eiusmod tempor incididunt ut labore et dolore 
-                                magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                                exercitation ullamco laboris nisi ut aliquip.
+                                Every space has a story waiting to be told. At Luminae, 
+                                we don't just arrange furniture — we choreograph light, 
+                                texture, and form to create environments that resonate 
+                                with the people who inhabit them.
                             </p>
                         </div>
 
@@ -213,14 +144,20 @@ const LivingRoom = () => {
                         </div>
                     </div>
 
-                    {/* Right: 3D Floating Cushion */}
-                    <div ref={canvasRef} style={{
-                        width: '100%',
-                        height: 'clamp(300px, 50vh, 500px)',
-                        borderRadius: '8px',
-                        border: '1px solid #C9A96E22',
-                        overflow: 'hidden',
-                    }} />
+                    {/* Right: Portfolio Image (Office) */}
+                    <div style={{ width: '100%', height: 'clamp(300px, 50vh, 550px)', overflow: 'hidden', borderRadius: '8px' }}>
+                        <img 
+                            ref={imageRef}
+                            src="/process-materials.png" 
+                            alt="Design Materials"
+                            style={{
+                                width: '100%',
+                                height: '120%', // Extra height for parallax
+                                objectFit: 'cover',
+                                filter: 'brightness(0.85) contrast(1.1)'
+                            }} 
+                        />
+                    </div>
                 </div>
             </div>
 

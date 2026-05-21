@@ -34,12 +34,18 @@ const Footer = () => {
                 <div>
                     <h4 className="mono" style={{ color: 'var(--gold)', letterSpacing: '1px', marginBottom: '1.5rem', fontSize: '1.1rem' }}>LINKS</h4>
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        {['Home', 'About', 'Services', 'Projects'].map(link => (
-                            <li key={link}>
-                                <a href={`#${link.toLowerCase()}`} style={{ color: 'var(--gray)', textDecoration: 'none', transition: 'color 0.3s ease' }} 
+                        {[
+                            { label: 'Home', id: 'home' },
+                            { label: 'About', id: 'living' },
+                            { label: 'Portfolio', id: 'portfolio' },
+                            { label: 'Process', id: 'process' },
+                            { label: 'Testimonials', id: 'testimonials' },
+                        ].map(link => (
+                            <li key={link.id}>
+                                <a href={`#${link.id}`} style={{ color: 'var(--gray)', textDecoration: 'none', transition: 'color 0.3s ease' }} 
                                    onMouseEnter={(e) => e.target.style.color = 'var(--gold)'}
                                    onMouseLeave={(e) => e.target.style.color = 'var(--gray)'}
-                                >{link}</a>
+                                >{link.label}</a>
                             </li>
                         ))}
                     </ul>
@@ -49,9 +55,9 @@ const Footer = () => {
                 <div>
                     <h4 className="mono" style={{ color: 'var(--gold)', letterSpacing: '1px', marginBottom: '1.5rem', fontSize: '1.1rem' }}>CONNECT</h4>
                     <address style={{ fontStyle: 'normal', color: 'var(--gray)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                        <p>123 Design Avenue<br />New York, NY 10001</p>
+                        <p>42 Design Row, Bandra West<br />Mumbai, MH 400050</p>
                         <a href="mailto:hello@luminae.studio" style={{ color: 'var(--cream)', textDecoration: 'none' }}>hello@luminae.studio</a>
-                        <p>+1 (555) 123-4567</p>
+                        <p>+91 22 4872 9100</p>
                     </address>
                 </div>
             </div>

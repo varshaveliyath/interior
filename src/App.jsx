@@ -8,13 +8,17 @@ import Preloader from './components/Preloader';
 import Navbar from './components/Navbar';
 import Hero from './components/sections/Hero';
 import LivingRoom from './components/sections/LivingRoom';
-import Showcase from './components/sections/Showcase';
+
 import Prism from './components/sections/Prism';
 import Atmosphere from './components/sections/Atmosphere';
 import Bedroom from './components/sections/Bedroom';
+import Portfolio from './components/sections/Portfolio';
+import Process from './components/sections/Process';
+import Testimonials from './components/sections/Testimonials';
 import Outro from './components/sections/Outro';
 
 import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,8 +42,6 @@ function App() {
         touchMultiplier: 2,
     });
 
-    // Normalize scroll for mobile touch scrubbing
-    ScrollTrigger.normalizeScroll(true);
 
     function raf(time) {
         lenis.raf(time);
@@ -60,16 +62,20 @@ function App() {
 
   return (
     <>
+      <CustomCursor />
       <Preloader onComplete={() => setLoading(false)} />
       <main>
         <div className="noise-overlay" />
       <Navbar />
       <Hero />
       <LivingRoom />
-      <Showcase />
+
       <Prism />
       <Atmosphere />
       <Bedroom />
+      <Portfolio />
+      <Process />
+      <Testimonials />
       <Outro />
       <Footer />
     </main>

@@ -30,7 +30,9 @@ canvas {
 
 .noise-overlay {
   position: fixed;
-  inset: 0;
+  inset: -10%; /* Negative inset prevents the translate animation from revealing screen edges */
+  width: 120%;
+  height: 120%;
   z-index: 9999;
   pointer-events: none;
   opacity: 0.045;
@@ -123,7 +125,9 @@ canvas {
   pointer-events: none;
 }
 
-/* Nav Styles */
+/* Custom Cursor styles if needed */
+
+/* Base Styles */
 nav {
   transition: background 0.4s ease, border 0.4s ease, backdrop-filter 0.4s ease;
 }
@@ -209,18 +213,30 @@ nav.scrolled {
     display: none !important;
   }
 
-  section#bedroom h1 {
+  section#bedroom h1,
+  section#testimonials h1 {
      font-size: 20vw !important;
   }
   
   /* Stack grid layouts */
   #living > div > div, 
-  #bedroom > div > div {
+  #bedroom > div > div,
+  #testimonials > div > div > div {
      grid-template-columns: 1fr !important;
      gap: 2rem !important;
   }
   
-  #living canvas, #bedroom canvas {
+  #living canvas, #bedroom canvas, #testimonials canvas {
      height: 300px !important;
+  }
+
+  /* Portfolio grid mobile */
+  #portfolio > div > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Process progress indicator - hide on mobile */
+  #process > div > div:nth-child(2) {
+    display: none !important;
   }
 }

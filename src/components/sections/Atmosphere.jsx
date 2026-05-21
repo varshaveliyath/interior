@@ -34,7 +34,7 @@ const Atmosphere = () => {
         scene.add(pointLight4);
 
         // Generate Glass Panes floating vertically
-        const paneGeo = new THREE.PlaneGeometry(8, 5);
+        const paneGeo = new THREE.PlaneGeometry(4, 2.5);
         const paneMat = new THREE.MeshPhysicalMaterial({
             color: 0x222222,
             metalness: 0.1,
@@ -81,12 +81,12 @@ const Atmosphere = () => {
             trigger: sectionRef.current,
             start: "top top",
             end: "bottom bottom",
-            scrub: true,
+            scrub: 2,
             onUpdate: (self) => {
                 const progress = self.progress;
 
-                // Move camera downwards through the panes
-                camera.current.position.y = 10 - (progress * 20); // descend 20 units
+                // Move camera downwards through the panes smoothly
+                camera.current.position.y = 10 - (progress * 15);
                 
                 // Keep looking forward/down slightly relative to camera
                 camera.current.lookAt(0, camera.current.position.y - 2, 0);
@@ -106,9 +106,9 @@ const Atmosphere = () => {
             // Panes gently drift
             const time = Date.now() * 0.001;
             panesRef.current.forEach((pane, i) => {
-                pane.rotation.x += 0.001;
-                pane.rotation.y += 0.001;
-                pane.position.x += Math.sin(time * 0.5 + i) * 0.002;
+                pane.rotation.x += 0.0003;
+                pane.rotation.y += 0.0003;
+                pane.position.x += Math.sin(time * 0.2 + i) * 0.001;
             });
 
             if (renderer.current) {
@@ -128,10 +128,20 @@ const Atmosphere = () => {
                     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
                     textAlign: 'center', zIndex: 10, pointerEvents: 'none', width: '100%', opacity: 0
                 }}>
-                    <span className="section-label" style={{ color: '#fff', letterSpacing: '4px', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>SHAPING THE VOID</span>
+                    <span className="section-label" style={{ color: '#fff', letterSpacing: '4px', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>LIGHT & SHADOW</span>
                     <h2 className="hero-headline" style={{ fontSize: 'clamp(3rem, 8vw, 8rem)', color: '#E8A84C', margin: '1rem 0', textShadow: '0 10px 30px rgba(0,0,0,0.8)' }}>
-                        Atmospherics
+                        Luminous Atmospheres
                     </h2>
+                    <p style={{
+                        maxWidth: '600px',
+                        margin: '0 auto',
+                        color: '#ddd',
+                        fontSize: 'clamp(0.85rem, 1vw, 1rem)',
+                        lineHeight: 1.6,
+                        fontFamily: "'Satoshi', sans-serif"
+                    }}>
+                        Light is not merely functional; it is an architectural material. By sculpting shadows and directing luminosity, we craft environments that breathe and adapt to human emotion. Our bespoke lighting setups transform static spaces into living, dynamic sanctuaries that elevate the spirit and deeply resonate with every subtle shift in time.
+                    </p>
                 </div>
             </div>
         </section>
